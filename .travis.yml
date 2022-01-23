@@ -1,9 +1,12 @@
 dist: trusty
 jdk: oraclejdk8
 language: java
+before_install:
+  - chmod +x mvnw
 services:
   - postgresql
   - docker
+
 env:
   global:
     - secure: "DeHaJTjWbmpwaOD3sdxYoekm8AsUtaWbweTv1KxMByBaCPA9SXCbiywbTCS0z5Bc1vnIq9zXnM1cLLt6gApFYoB9nzevEWBs91Ax6RvVwBXGJZmnWL/cmnNlCOiftmDHQMgHpH1U1cLZpjERAQlwHQk0+M5xeZ7m7O+0S/g8aspxYzDDMLahMxU7uk3QgbnI65+sHX4kmNPCe01oixOthayjz7QcpqqbdWlTEmXZ2TIad5js+7lPrsgTIBduS/Ee0HgX9d1lvQGtegYkC0Oy3yi619LMBKNCVXIn6TA+fWTBdXPVL/ca7FAYcEx1fU/y5qa0a2gFPDbYW0YY1roLc5mKz4sLCzuvVcch36Okqk+mkFpHprOl3FteKBYGyCYzWFDUGO43Th73QVGxJPnwfUzuqkYIoWfMWlp5EkCNFNDxYXX4/KxgoUBShX2o1sLmzTTwijN1cTeJFlwmYJwuQ/ndL4Lau/7svG+4WkwJObbD5OFgCAFO9xuoVUnVQ1ozpENZRQa1r+m5omc9S/FW08YFq9Z7n2K8phhS5Cemuwx2irjaRzVmcbUx8rPw/nm7GcQVvYIiljnt6q9IE7wSRJWsVJwXMsNeRBRK2LAYueQSk8amDYWcpJBcqR591avM5+Tqjxf+TUCgK2pTQa2fBTNYidd59lkYZocatPJ4fL0="
@@ -17,7 +20,7 @@ script:
 after_success:
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo "$TRAVIS_BRANCH"; fi`
-  - export IMAGE_NAME=myapi/simpleapi3
+  - export IMAGE_NAME=simpleapi/main-repo
   - docker build -t $IMAGE_NAME:latest .
   - docker tag $IMAGE_NAME:latest $IMAGE_NAME:$TAG
   - docker push $IMAGE_NAME:$TAG
@@ -25,4 +28,4 @@ after_success:
 deploy:
   provider: heroku
   api_key: $HEROKU_API_KEY
-  app: septent-api2
+  app: septent-api
